@@ -17,10 +17,10 @@ function repeat(string, n) {
   return (new Array(n + 1)).join(string);
 }
 
-describe('Scalar style dump:', function () {
+suite('Scalar style dump:', function () {
 
-  describe('Plain style', function () {
-    it('is preferred', function () {
+  suite('Plain style', function () {
+    test('is preferred', function () {
       [ 'plain',
         'hello world',
         'pizza 3.14159',
@@ -33,73 +33,73 @@ describe('Scalar style dump:', function () {
         '100% safe non-first characters? Of course!',
         'Jack & Jill <well@example.com>'
       ].forEach(function (string) {
-        assert.strictEqual(yaml.dump(string), string + '\n');
+        assert.strictEqual(yaml.safeDump(string), string + '\n');
       });
     });
 
-    it('disallows flow indicators inside flow collections', function () {
-      assert.strictEqual(yaml.dump({ quote: 'mispell [sic]' }, { flowLevel: 0 }),
+    test('disallows flow indicators inside flow collections', function () {
+      assert.strictEqual(yaml.safeDump({ quote: 'mispell [sic]' }, { flowLevel: 0 }),
         "{quote: 'mispell [sic]'}\n");
-      assert.strictEqual(yaml.dump({ key: 'no commas, either' }, { flowLevel: 0 }),
+      assert.strictEqual(yaml.safeDump({ key: 'no commas, either' }, { flowLevel: 0 }),
         "{key: 'no commas, either'}\n");
     });
   });
 
-  describe('Single- and double-quoted styles', function () {
-    it('quote strings of ambiguous type', function () {
-      assert.strictEqual(yaml.dump('Yes'), '\'Yes\'\n');
-      assert.strictEqual(yaml.dump('true'), '\'true\'\n');
-      assert.strictEqual(yaml.dump('42'), '\'42\'\n');
-      assert.strictEqual(yaml.dump('99.9'), '\'99.9\'\n');
-      assert.strictEqual(yaml.dump('127.0001'), '\'127.0001\'\n');
-      assert.strictEqual(yaml.dump('1.23015e+3'), '\'1.23015e+3\'\n');
+  suite('Single- and double-quoted styles', function () {
+    test('quote strings of ambiguous type', function () {
+      assert.strictEqual(yaml.safeDump('Yes'), '\'Yes\'\n');
+      assert.strictEqual(yaml.safeDump('true'), '\'true\'\n');
+      assert.strictEqual(yaml.safeDump('42'), '\'42\'\n');
+      assert.strictEqual(yaml.safeDump('99.9'), '\'99.9\'\n');
+      assert.strictEqual(yaml.safeDump('127.0001'), '\'127.0001\'\n');
+      assert.strictEqual(yaml.safeDump('1.23015e+3'), '\'1.23015e+3\'\n');
     });
 
-    it('quote leading/trailing whitespace', function () {
-      assert.strictEqual(yaml.dump(' leading space'), '\' leading space\'\n');
-      assert.strictEqual(yaml.dump('trailing space '), '\'trailing space \'\n');
+    test('quote leading/trailing whitespace', function () {
+      assert.strictEqual(yaml.safeDump(' leading space'), '\' leading space\'\n');
+      assert.strictEqual(yaml.safeDump('trailing space '), '\'trailing space \'\n');
     });
 
-    it('quote leading quotes', function () {
-      assert.strictEqual(yaml.dump("'singles double'"), "'''singles double'''\n");
-      assert.strictEqual(yaml.dump('"single double'), '\'"single double\'\n');
+    test('quote leading quotes', function () {
+      assert.strictEqual(yaml.safeDump("'singles double'"), "'''singles double'''\n");
+      assert.strictEqual(yaml.safeDump('"single double'), '\'"single double\'\n');
     });
 
-    it('escape \\ and " in double-quoted', function () {
-      assert.strictEqual(yaml.dump('\u0007 escape\\ escaper"'), '"\\a escape\\\\ escaper\\""\n');
+    test('escape \\ and " in double-quoted', function () {
+      assert.strictEqual(yaml.safeDump('\u0007 escape\\ escaper"'), '"\\a escape\\\\ escaper\\""\n');
     });
 
-    it('escape non-printables', function () {
-      assert.strictEqual(yaml.dump('a\nb\u0001c'), '"a\\nb\\x01c"\n');
+    test('escape non-printables', function () {
+      assert.strictEqual(yaml.safeDump('a\nb\u0001c'), '"a\\nb\\x01c"\n');
     });
   });
 
-  describe('Literal style', function () {
+  suite('Literal style', function () {
     var content = 'a\nb \n\n c\n  d', indented = indent(content);
 
-    it('preserves trailing newlines using chomping', function () {
-      assert.strictEqual(yaml.dump({ a: '\n', b: '\n\n', c: 'c\n', d: 'd\nd' }),
+    test('preserves trailing newlines using chomping', function () {
+      assert.strictEqual(yaml.safeDump({ a: '\n', b: '\n\n', c: 'c\n', d: 'd\nd' }),
         'a: |+\n\nb: |+\n\n\nc: |\n  c\nd: |-\n  d\n  d\n');
-      assert.strictEqual(yaml.dump('\n'),               '|+\n' + '\n');
-      assert.strictEqual(yaml.dump('\n\n'),             '|+\n' + '\n\n');
+      assert.strictEqual(yaml.safeDump('\n'),               '|+\n' + '\n');
+      assert.strictEqual(yaml.safeDump('\n\n'),             '|+\n' + '\n\n');
 
-      assert.strictEqual(yaml.dump(content),            '|-\n' + indented + '\n');
-      assert.strictEqual(yaml.dump(content + '\n'),     '|\n'  + indented + '\n');
-      assert.strictEqual(yaml.dump(content + '\n\n'),   '|+\n' + indented + '\n\n');
-      assert.strictEqual(yaml.dump(content + '\n\n\n'), '|+\n' + indented + '\n\n\n');
+      assert.strictEqual(yaml.safeDump(content),            '|-\n' + indented + '\n');
+      assert.strictEqual(yaml.safeDump(content + '\n'),     '|\n'  + indented + '\n');
+      assert.strictEqual(yaml.safeDump(content + '\n\n'),   '|+\n' + indented + '\n\n');
+      assert.strictEqual(yaml.safeDump(content + '\n\n\n'), '|+\n' + indented + '\n\n\n');
     });
 
-    it('accepts leading whitespace', function () {
-      assert.strictEqual(yaml.dump('   ' + content), '|2-\n   ' + indented + '\n');
+    test('accepts leading whitespace', function () {
+      assert.strictEqual(yaml.safeDump('   ' + content), '|2-\n   ' + indented + '\n');
     });
 
-    it('falls back to quoting when required indent indicator is too large', function () {
-      assert.strictEqual(yaml.dump(' these go\nup to\neleven', { indent: 11 }),
+    test('falls back to quoting when required indent indicator is too large', function () {
+      assert.strictEqual(yaml.safeDump(' these go\nup to\neleven', { indent: 11 }),
         '" these go\\nup to\\neleven"\n');
     });
 
-    it('does not use block style for multiline key', function () {
-      assert.strictEqual(yaml.dump({
+    test('does not use block style for multiline key', function () {
+      assert.strictEqual(yaml.safeDump({
         'push\nand': {
           you: 'pull'
         }
@@ -107,7 +107,7 @@ describe('Scalar style dump:', function () {
     });
   });
 
-  describe('Folded style', function () {
+  suite('Folded style', function () {
     (function () {
       var content = (function () {
         var result = '';
@@ -150,14 +150,14 @@ describe('Scalar style dump:', function () {
       var indented = indent(wrapped);
 
       function dumpNarrow(s) {
-        return yaml.dump(s, { lineWidth: 30 + 2 });
+        return yaml.safeDump(s, { lineWidth: 30 + 2 });
       }
 
-      it('wraps lines and ignores more-indented lines ', function () {
+      test('wraps lines and ignores more-indented lines ', function () {
         assert.strictEqual(dumpNarrow(content),            '>-\n' + indented + '\n');
       });
 
-      it('preserves trailing newlines using chomping', function () {
+      test('preserves trailing newlines using chomping', function () {
         assert.strictEqual(dumpNarrow(content + '\n'),     '>\n'  + indented + '\n');
         assert.strictEqual(dumpNarrow(content + '\n\n'),   '>+\n' + indented + '\n\n');
         assert.strictEqual(dumpNarrow(content + '\n\n\n'), '>+\n' + indented + '\n\n\n');
@@ -166,12 +166,12 @@ describe('Scalar style dump:', function () {
 
     // Dump and check that dump-then-load preserves content (is the identity function).
     function dump(input, opts) {
-      var output = yaml.dump(input, opts);
-      assert.strictEqual(yaml.load(output), input, 'Dump then load should preserve content');
+      var output = yaml.safeDump(input, opts);
+      assert.strictEqual(yaml.safeLoad(output), input, 'Dump then load should preserve content');
       return output;
     }
 
-    it('should not cut off a long word at the start of a line', function () {
+    test('should not cut off a long word at the start of a line', function () {
       assert.strictEqual(dump('123\n' + repeat('1234567890', 9) + ' hello\ngoodbye'),
         '>-\n' + indent(
           '123\n' +
@@ -182,7 +182,7 @@ describe('Scalar style dump:', function () {
           'goodbye\n'));
     });
 
-    it('preserves consecutive spaces', function () {
+    test('preserves consecutive spaces', function () {
       var alphabet = 'a bc  def  ghi' + repeat(' ', 70) + 'jk  lmn o\n'
         + ' p  qrstu     v' + repeat(' ', 80) + '\nw x\n' + 'yz  ';
       assert.strictEqual(dump(alphabet),
@@ -197,16 +197,16 @@ describe('Scalar style dump:', function () {
 
       var indeed = repeat('word. ', 31) + '\n' +
         [ 2, 3, 5, 7, 11, 13, 17 ]
-          .map(function (n) { return repeat(' ', n); })
-          .join('\n');
+        .map(function (n) { return repeat(' ', n); })
+        .join('\n');
       assert.strictEqual(dump(indeed),
-        '>-\n' + indent(
-          'word. word. word. word. word. word. word. word. word. word. word. word. word.\n' +
-          'word. word. word. word. word. word. word. word. word. word. word. word. word.\n' +
-          'word. word. word. word. word. \n' +
-          [ 2, 3, 5, 7, 11, 13, 17 ]
-            .map(function (n) { return repeat(' ', n); })
-            .join('\n') + '\n'));
+      '>-\n' + indent(
+        'word. word. word. word. word. word. word. word. word. word. word. word. word.\n' +
+        'word. word. word. word. word. word. word. word. word. word. word. word. word.\n' +
+        'word. word. word. word. word. \n' +
+        [ 2, 3, 5, 7, 11, 13, 17 ]
+        .map(function (n) { return repeat(' ', n); })
+        .join('\n') + '\n'));
     });
 
     var story = 'Call me Ishmael. Some years ago—never mind how long precisely—'
@@ -216,27 +216,27 @@ describe('Scalar style dump:', function () {
     var prefix = 'var short_story = "",';
     var line = 'longer_story = "' + story + '";';
 
-    it('should fold a long last line missing an ending newline', function () {
+    test('should fold a long last line missing an ending newline', function () {
       var content = [ prefix, line ].join('\n');
 
       var lengths = dump(content).split('\n').map(getLength);
-      assert.deepStrictEqual(lengths, [ 2, 23, 0, 69, 76, 80, 24, 0 ]);
+      assert.deepEqual(lengths, [ 2, 23, 0, 69, 76, 80, 24, 0 ]);
     });
 
-    it('should not fold a more-indented last line', function functionName() {
+    test('should not fold a more-indented last line', function functionName() {
       var content = [ prefix, line, '    ' + line ].join('\n');
 
       var lengths = dump(content).split('\n').map(getLength);
-      assert.deepStrictEqual(lengths, [ 2, 23, 0, 69, 76, 80, 24, 250, 0 ]);
+      assert.deepEqual(lengths, [ 2, 23, 0, 69, 76, 80, 24, 250, 0 ]);
     });
 
-    it('should not fold when lineWidth === -1', function () {
+    test('should not fold when lineWidth === -1', function () {
       var content = [ prefix, line, line + line, line ].join('\n');
 
       assert.strictEqual(dump(content, { lineWidth: -1 }), '|-\n' + indent(content) + '\n');
     });
 
-    it('falls back to literal style when no lines are foldable', function () {
+    test('falls back to literal style when no lines are foldable', function () {
       var content = [ prefix, '    ' + line, '    ' + line ].join('\n');
 
       assert.strictEqual(dump(content), '|-\n' + indent(content) + '\n');

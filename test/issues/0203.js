@@ -3,16 +3,11 @@
 
 var assert = require('assert');
 var yaml = require('../../');
+var readFileSync = require('fs').readFileSync;
 
 
-it('Don\'t throw on warning', function () {
-  var src = `
-test: |-
+test('Don\'t throw on warning', function () {
+  var src = readFileSync(require('path').join(__dirname, '/0203.yml'), 'utf8');
 
-
-  Hello
-  world
-`;
-
-  assert.deepStrictEqual(yaml.load(src), { test: '\n\nHello\nworld' });
+  assert.deepEqual(yaml.safeLoad(src), { test: '\n\nHello\nworld' });
 });

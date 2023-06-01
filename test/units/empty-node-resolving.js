@@ -2,60 +2,73 @@
 
 
 var assert = require('assert');
-var yaml   = require('../../');
+var yaml   = require('../../lib/js-yaml');
 
 
-describe('Resolving explicit tags on empty nodes', function () {
-  it('!!binary', function () {
+suite('Resolving explicit tags on empty nodes', function () {
+  test('!!binary', function () {
     assert.throws(function () { yaml.load('!!binary'); }, yaml.YAMLException);
   });
 
-  it('!!bool', function () {
+  test('!!bool', function () {
     assert.throws(function () { yaml.load('!!bool'); }, yaml.YAMLException);
   });
 
-  it('!!float', function () {
+  test('!!float', function () {
     assert.throws(function () { yaml.load('!!float'); }, yaml.YAMLException);
   });
 
-  it('!!int', function () {
+  test('!!int', function () {
     assert.throws(function () { yaml.load('!!int'); }, yaml.YAMLException);
   });
 
-  it('!!map', function () {
-    assert.deepStrictEqual(yaml.load('!!map'), {});
+  test('!!map', function () {
+    assert.deepEqual(yaml.load('!!map'), {});
   });
 
-  it('!!merge', function () {
+  test('!!merge', function () {
     assert.doesNotThrow(function () { yaml.load('? !!merge\n: []'); });
   });
 
-  it('!!null', function () {
+  test('!!null', function () {
     // Fetch null from an array to reduce chance that null is returned because of another bug
     assert.strictEqual(yaml.load('- !!null')[0], null);
   });
 
-  it('!!omap', function () {
-    assert.deepStrictEqual(yaml.load('!!omap'), []);
+  test('!!omap', function () {
+    assert.deepEqual(yaml.load('!!omap'), []);
   });
 
-  it('!!pairs', function () {
-    assert.deepStrictEqual(yaml.load('!!pairs'), []);
+  test('!!pairs', function () {
+    assert.deepEqual(yaml.load('!!pairs'), []);
   });
 
-  it('!!seq', function () {
-    assert.deepStrictEqual(yaml.load('!!seq'), []);
+  test('!!seq', function () {
+    assert.deepEqual(yaml.load('!!seq'), []);
   });
 
-  it('!!set', function () {
-    assert.deepStrictEqual(yaml.load('!!set'), {});
+  test('!!set', function () {
+    assert.deepEqual(yaml.load('!!set'), {});
   });
 
-  it('!!str', function () {
+  test('!!str', function () {
     assert.strictEqual(yaml.load('!!str'), '');
   });
 
-  it('!!timestamp', function () {
+  test('!!timestamp', function () {
     assert.throws(function () { yaml.load('!!timestamp'); }, yaml.YAMLException);
+  });
+
+  test('!!js/function', function () {
+    assert.throws(function () { yaml.load('!!js/function'); }, yaml.YAMLException);
+  });
+
+  test('!!js/regexp', function () {
+    assert.throws(function () { yaml.load('!!js/regexp'); }, yaml.YAMLException);
+  });
+
+  test('!!js/undefined', function () {
+    // Fetch undefined from an array to reduce chance that undefined is returned because of another bug
+    assert.strictEqual(yaml.load('- !!js/undefined')[0], undefined);
   });
 });

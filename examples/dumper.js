@@ -2,7 +2,7 @@
 
 /*eslint-disable no-console*/
 
-var yaml = require('../');
+var yaml = require('../lib/js-yaml');
 var object = require('./dumper.json');
 
 

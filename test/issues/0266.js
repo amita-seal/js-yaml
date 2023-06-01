@@ -11,13 +11,11 @@ var DEPRECATED_BOOLEANS_SYNTAX = [
 ];
 
 
-it('Dumper should not take into account booleans syntax from YAML 1.0/1.1 in noCompatMode', function () {
+test('Dumper should not take into account booleans syntax from YAML 1.0/1.1 in noCompatMode', function () {
   DEPRECATED_BOOLEANS_SYNTAX.forEach(function (string) {
     var dump = yaml.dump(string, { noCompatMode: true }).trim();
 
-    assert(
-      (dump === string),
-      ('"' + string + '" string is not dumped as-is; actual dump: ' + dump)
-    );
+    assert((dump === string),
+           ('"' + string + '" string is not dumped as-is; actual dump: ' + dump));
   });
 });

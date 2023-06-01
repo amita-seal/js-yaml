@@ -5,7 +5,7 @@ var assert = require('assert');
 var yaml   = require('../../');
 
 
-it('Duplicated objects within array', function () {
+test('Duplicated objects within array', function () {
   var obj = { test: 'canary' };
   var arrayWithRefs = [ obj, obj ];
 
@@ -15,7 +15,7 @@ it('Duplicated objects within array', function () {
   assert.strictEqual(obtained[0], obtained[1]);
 });
 
-it('Duplicated arrays within array', function () {
+test('Duplicated arrays within array', function () {
   var array = [ 0, 1 ];
   var arrayWithRefs = [ array, array ];
 

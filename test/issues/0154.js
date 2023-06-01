@@ -5,7 +5,7 @@ var assert = require('assert');
 var yaml   = require('../../');
 
 
-it('Indentation warning on empty lines within quoted scalars and flow collections', function () {
+test('Indentation warning on empty lines within quoted scalars and flow collections', function () {
   assert.doesNotThrow(function () { yaml.load("- 'hello\n\n  world'"); });
   assert.doesNotThrow(function () { yaml.load('- "hello\n\n  world"'); });
   assert.doesNotThrow(function () { yaml.load('- [hello,\n\n  world]'); });

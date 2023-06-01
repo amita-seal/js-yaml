@@ -30,8 +30,8 @@
 
 'use strict';
 
-/* eslint-env browser */
-/* eslint-disable no-bitwise */
+/*global window*/
+/*eslint-disable no-bitwise*/
 
 function noop() {}
 

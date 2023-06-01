@@ -2,7 +2,7 @@
 
 
 var util = require('util');
-var yaml = require('../../');
+var yaml = require('../../lib/js-yaml');
 
 
 function Tag1(parameters) {
@@ -30,7 +30,7 @@ function Foo(parameters) {
 }
 
 
-var TEST_SCHEMA = yaml.DEFAULT_SCHEMA.extend([
+var TEST_SCHEMA = yaml.Schema.create([
   // NOTE: Type order matters!
   // Inherited classes must precede their parents because the dumper
   // doesn't inspect class inheritance and just picks first suitable

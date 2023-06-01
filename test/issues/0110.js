@@ -5,7 +5,7 @@ var assert = require('assert');
 var yaml   = require('../../');
 
 
-it('Circular and cross references', function () {
+test('Circular and cross references', function () {
   var source = {
     a: { a: 1 },
     b: [ 1, 2 ],

@@ -1,18 +1,6 @@
 env:
   node:     true
   browser:  true
-  es6:      false
-
-globals:
-  Uint8Array: false
-
-ignorePatterns:
-  - coverage/
-  - demo/
-  - dist/
-  - node_modules
-  - benchmark/implementations
-  - rollup.config.js
 
 rules:
   accessor-pairs:         2
@@ -131,7 +119,7 @@ rules:
   #spaced-comment:         [ 1, always, { exceptions: [ '/', '=' ] } ]
   strict:                 [ 2, global ]
   quotes:                 [ 2, single, avoid-escape ]
-  quote-props:            [ 1, 'as-needed' ]
+  quote-props:            [ 1, 'as-needed', { "keywords": true } ]
   radix:                  2
   use-isnan:              2
   valid-typeof:           2
