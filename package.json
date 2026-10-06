@@ -27,7 +27,7 @@
     "js-yaml": "bin/js-yaml.js"
   },
   "dependencies": {
-    "argparse": "^1.0.7",
+    "argparse": "^2.0.0",
     "esprima": "^2.6.0"
   },
   "devDependencies": {
